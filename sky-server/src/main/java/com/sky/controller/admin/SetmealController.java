@@ -92,5 +92,20 @@ public class SetmealController {
                 setmealService.update(setmealDTO);
                 return Result.success();
         }
+
+        /**
+         * 更改套餐状态
+         *
+         * @param status
+         * @param id
+         * @return
+         */
+        @PostMapping("/status/{status}")
+        @ApiOperation("更改套餐状态")
+        public Result swichStatus(@PathVariable Integer status, Long id) {
+                log.info("更改套餐状态:{}", id);
+                setmealService.switchStatus(status, id);
+                return Result.success();
+        }
 }
 

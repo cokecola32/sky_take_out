@@ -61,5 +61,6 @@ public interface SetmealMapper {
          *
          * @param setmeal
          */
+        @AutoFill(value = OperationType.UPDATE)
         void update(Setmeal setmeal);
 }

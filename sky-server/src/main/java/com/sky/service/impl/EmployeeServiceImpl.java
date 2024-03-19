@@ -9,16 +9,20 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
+import com.sky.exception.PasswordEditFailedException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import com.sky.utils.MD5EncoderUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
@@ -141,6 +145,26 @@ public class EmployeeServiceImpl implements EmployeeService {
                 BeanUtils.copyProperties(employeeDTO, employee);
 //                employee.setUpdateTime(LocalDateTime.now());
 //                employee.setUpdateUser(BaseContext.getCurrentId());
+                employeeMapper.update(employee);
+        }
+
+        /**
+         * 修改密码
+         *
+         * @param passwordEditDTO
+         */
+        @Override
+        @Transactional
+        public void passwordEdit(PasswordEditDTO passwordEditDTO) {
+                Long id = passwordEditDTO.getEmpId();
+                Employee employee = employeeMapper.getById(id);
+                String password = employee.getPassword();
+                String olaPassword = MD5EncoderUtil.encode(passwordEditDTO.getOldPassword());
+                if (!password.equals(olaPassword)) {
+                        throw new PasswordEditFailedException(MessageConstant.PASSWORD_ERROR);
+                }
+                String newPassword = MD5EncoderUtil.encode(passwordEditDTO.getNewPassword());
+                employee.setPassword(newPassword);
                 employeeMapper.update(employee);
         }
 }

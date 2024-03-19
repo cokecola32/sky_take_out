@@ -7,8 +7,10 @@ import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.exception.SetmealEnableFailedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
@@ -125,5 +127,30 @@ public class SetmealServiceImpl implements SetmealService {
                         setmealDish.setSetmealId(setmealId);
                 });
                 setmealDishMapper.insertBatch(setmealDishes);
+        }
+
+        /**
+         * 更改套餐状态
+         *
+         * @param status
+         * @param id
+         */
+        @Override
+        public void switchStatus(Integer status, Long id) {
+                if (status == StatusConstant.ENABLE) {
+                        List<Dish> dishes = dishMapper.getBySetmealId(id);
+                        if (dishes != null && dishes.size() > 0) {
+                                dishes.forEach(dish -> {
+                                        if (dish.getStatus() == StatusConstant.DISABLE) {
+                                                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                                        }
+                                });
+                        }
+                }
+                Setmeal setmeal = Setmeal.builder()
+                        .id(id)
+                        .status(status)
+                        .build();
+                setmealMapper.update(setmeal);
         }
 }

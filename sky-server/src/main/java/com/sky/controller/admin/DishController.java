@@ -95,6 +95,13 @@ public class DishController {
                 dishService.updateWithFlavor(dishDTO);
                 return Result.success();
         }
+        @PostMapping("/status/{status}")
+        @ApiOperation("修改菜品状态")
+        public Result switchDish(@PathVariable Integer status, Long id) {
+                log.info("修改菜品状态:{}", id);
+                dishService.switchDish(status, id);
+                return Result.success();
+        }
 
         /**
          * 根据分类ID查询菜品
