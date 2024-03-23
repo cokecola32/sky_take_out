@@ -20,6 +20,7 @@ import java.util.List;
 @Slf4j
 @Api(tags = "C端-菜品浏览接口")
 public class DishController {
+
         @Autowired
         private DishService dishService;
 
@@ -35,9 +36,7 @@ public class DishController {
                 Dish dish = new Dish();
                 dish.setCategoryId(categoryId);
                 dish.setStatus(StatusConstant.ENABLE);//查询起售中的菜品
-
                 List<DishVO> list = dishService.listWithFlavor(dish);
-
                 return Result.success(list);
         }
 
