@@ -481,6 +481,4 @@ public class OrderServiceImpl implements OrderService {
                 orders.setDeliveryTime(LocalDateTime.now());
                 orders.setStatus(Orders.COMPLETED);
         }
-
-
 }
