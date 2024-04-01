@@ -49,7 +49,7 @@ public class ReportServiceImpl implements ReportService {
                         begin = begin.plusDays(1);
                         dateList.add(begin);
                 }
-                List<BigDecimal> turnoverList = new ArrayList<>();
+                List<Double> turnoverList = new ArrayList<>();
                 for (LocalDate date : dateList) {
                         LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);
                         LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);
@@ -57,8 +57,8 @@ public class ReportServiceImpl implements ReportService {
                         map.put("beginTime", beginTime);
                         map.put("endTime", endTime);
                         map.put("status", Orders.COMPLETED);
-                        BigDecimal turnover = orderMapper.sumByMap(map);
-                        turnover = turnover == null ? BigDecimal.ZERO : turnover;
+                        Double turnover = orderMapper.sumByMap(map);
+                        turnover = turnover == null ? 0.0 : turnover;
                         turnoverList.add(turnover);
                 }
                 return TurnoverReportVO.builder()
